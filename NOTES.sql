@@ -1,9 +1,6 @@
-/* To get started run the following SQL commands. We create 
-a user in the database with username: "fred" and password: "zap",
-we grant him with all permissions and give him access only
-through the localhost.The 'fred'@'localhost' is a trick to
-firewall your database server from connections coming from
-outside. */
+/* To get started run the following SQL commands.
+Create a user in the database with username: "fred" and password: "zap",
+grant him with all permissions and give him access only through the localhost. */
 
 CREATE DATABASE misc;
 CREATE USER 'fred'@'localhost' IDENTIFIED BY 'zap';
