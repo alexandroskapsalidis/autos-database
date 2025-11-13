@@ -11,6 +11,17 @@ require_once "pdo.php";
 $stmt = $pdo->query("SELECT make, year, mileage, auto_id FROM autos ORDER BY make");
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Handling the Delete button
+$deleteMessage = "";
+if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
+  $sql = "DELETE FROM autos WHERE auto_id = :zip";
+  // echo "<pre>\n$sql\n</pre>\n";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(array(':zip' => $_POST['auto_id']));
+  $deleteMessage = "The row deleded succesfully.";
+  $sqlDeleteQuery = $sql;
+}
+
 ?>
 
 <!------------------ The View ------------------------>
@@ -39,7 +50,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h1 class="mb-5 text-center">Welcome to Autos</h1>
     <table class="table mt-4 p-5">
       <?php
-      echo "<h2>All Autos</h2>";
+      echo "<h3>All Autos</h3>";
       echo "<tr><th>Make</th><th>Year</th><th>Mileage</th><th>Edit</th>";
       foreach ($rows as $row) {
         echo "<tr><td>";
@@ -49,8 +60,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo ("</td><td>");
         echo ($row['mileage']);
         echo ("</td><td>");
-        // We create a little form in every row. There is a Primary Key embeded in the 
-        // hidden field in each of those forms 
+        // A little form in every row with a Primary Key embeded in the hidden field 
         echo ('<form method="post"><input type="hidden" ');
         echo ('name="auto_id" value="' . $row['auto_id'] . '">' . "\n");
         echo ('<input type="submit"  class="btn btn-danger px-4" value="Del" name="delete">');
@@ -59,7 +69,26 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       }
       ?>
     </table>
+    <?php
+    // Message for succesfull deletion 
+    if (!empty($deleteMessage)) {
+      echo '<h5 class="deleteMessage text-success">' .  htmlentities($deleteMessage) . '</h5>';
+    }
+    ?>
+
+
   </main>
+
+
+  <script>
+    // Hiding the message after some seconds 
+    setTimeout(function() {
+      var msg = document.querySelector('.deleteMessage');
+      if (msg) {
+        msg.style.visibility = 'hidden';
+      }
+    }, 5000);
+  </script>
 
 </body>
 
