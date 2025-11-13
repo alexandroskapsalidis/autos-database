@@ -44,7 +44,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
 <body>
 
   <main class="w-50 container bg-light my-5 p-5">
-    <h1 class="mb-4 text-center">Welcome to Aytos</h1>
+    <h1 class="mb-5 text-center">Welcome to Autos</h1>
     <p>Please Login</p>
     <form method="post">
       <p>Email:

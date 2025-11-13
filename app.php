@@ -7,6 +7,9 @@
 // Including database connection code 
 require_once "pdo.php";
 
+// Fetching the autos to show them on a Table 
+$stmt = $pdo->query("SELECT make, year, mileage, auto_id FROM autos ORDER BY make");
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -33,8 +36,29 @@ require_once "pdo.php";
 <body>
 
   <main class="w-50 container bg-light my-5 p-5">
-    <h1 class="mb-4 text-center">Welcome to Aytos</h1>
-
+    <h1 class="mb-5 text-center">Welcome to Autos</h1>
+    <table class="table mt-4 p-5">
+      <?php
+      echo "<h2>All Autos</h2>";
+      echo "<tr><th>Make</th><th>Year</th><th>Mileage</th><th>Edit</th>";
+      foreach ($rows as $row) {
+        echo "<tr><td>";
+        echo ($row['make']);
+        echo ("</td><td>");
+        echo ($row['year']);
+        echo ("</td><td>");
+        echo ($row['mileage']);
+        echo ("</td><td>");
+        // We create a little form in every row. There is a Primary Key embeded in the 
+        // hidden field in each of those forms 
+        echo ('<form method="post"><input type="hidden" ');
+        echo ('name="auto_id" value="' . $row['auto_id'] . '">' . "\n");
+        echo ('<input type="submit"  class="btn btn-danger px-4" value="Del" name="delete">');
+        echo ("\n</form>\n");
+        echo ("</td></tr>\n");
+      }
+      ?>
+    </table>
   </main>
 
 </body>
