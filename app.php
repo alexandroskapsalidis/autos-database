@@ -7,10 +7,6 @@
 // Including database connection code 
 require_once "pdo.php";
 
-// Fetching the autos to show them on a Table 
-$stmt = $pdo->query("SELECT make, year, mileage, auto_id FROM autos ORDER BY make");
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 // Handling the Delete button
 $deleteMessage = "";
 if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
@@ -21,6 +17,26 @@ if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
   $deleteMessage = "The row deleded succesfully.";
   $sqlDeleteQuery = $sql;
 }
+
+// Handling the Insert new Auto form
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  if (
+    isset($_POST['make']) && isset($_POST['year']) && isset($_POST['mileage'])
+  ) {
+    $sql = "INSERT INTO autos (make, year, mileage)
+            VALUES (:make, :year, :mileage)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array(
+      ':make' => $_POST['make'],
+      ':year' => $_POST['year'],
+      ':mileage' => $_POST['mileage']
+    ));
+  }
+}
+
+// Fetching the autos to show them on a Table 
+$stmt = $pdo->query("SELECT make, year, mileage, auto_id FROM autos ORDER BY make");
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -39,7 +55,9 @@ if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
   <title>Autos Project</title>
 
   <style>
-
+    h2 {
+      font-size: 1.8rem;
+    }
   </style>
 
 </head>
@@ -48,9 +66,11 @@ if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
 
   <main class="w-50 container bg-light my-5 p-5">
     <h1 class="mb-5 text-center">Welcome to Autos</h1>
+
+    <!-- Showing all Autos -->
     <table class="table mt-4 p-5">
       <?php
-      echo "<h3>All Autos</h3>";
+      echo "<h2>All Autos</h2>";
       echo "<tr><th>Make</th><th>Year</th><th>Mileage</th><th>Edit</th>";
       foreach ($rows as $row) {
         echo "<tr><td>";
@@ -76,12 +96,26 @@ if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
     }
     ?>
 
-
+    <!-- Add New Auto form -->
+    <!-- <br> -->
+    <h2 class="pt-4">Add New Auto</h2>
+    <form method="post" class="mt-4">
+      <p>Make:
+        <input type="text" class="form-control" name="make" size="40">
+      </p>
+      <p>Year:
+        <input type="number" class="form-control" name="year" min="1900" max="2099" step="1">
+      </p>
+      <p>Mileage:
+        <input type="number" class="form-control" name="mileage">
+      </p>
+      <p><input type="submit" class="btn btn-success" value="Add New" /></p>
+    </form>
   </main>
 
 
   <script>
-    // Hiding the message after some seconds 
+    // Hiding the delete message after some seconds 
     setTimeout(function() {
       var msg = document.querySelector('.deleteMessage');
       if (msg) {
