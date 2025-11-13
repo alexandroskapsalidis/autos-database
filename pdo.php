@@ -5,7 +5,7 @@
 
 <?php
 $pdo = new PDO(
-   'mysql:host=localhost;port=3306;dbname=misc',
+   'mysql:host=localhost;port=3306;dbname=coursera_misc',
    'fred',
    'zap'
 );
