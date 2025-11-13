@@ -13,4 +13,23 @@ GRANT ALL ON misc.* TO 'fred'@'127.0.0.1';
 
 USE misc; (Or select misc in phpMyAdmin)
 
+-- Creating the table users and populate with some data
+CREATE TABLE users (
+   user_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   name VARCHAR(128),
+   email VARCHAR(128),
+   password VARCHAR(128),
+   INDEX(email)
+) ENGINE=InnoDB CHARSET=utf8;
 
+INSERT INTO users (name,email,password) VALUES ('Chuck','csev@umich.edu','123');
+INSERT INTO users (name,email,password) VALUES ('Glenn','gg@umich.edu','456');
+
+-- Creating the table autos and populate with some data
+CREATE TABLE autos (
+   auto_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+   make VARCHAR(128),
+   `year` INTEGER,
+   mileage INTEGER,
+   PRIMARY KEY(auto_id)
+);
