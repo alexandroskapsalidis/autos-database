@@ -3,9 +3,9 @@ Create a user in the database with username: "fred" and password: "zap",
 grant him with all permissions and give him access only through the localhost. */
 
 CREATE DATABASE misc;
-CREATE USER 'fred'@'localhost' IDENTIFIED BY 'zap';
+CREATE USER 'alex'@'localhost' IDENTIFIED BY 'zap';
 GRANT ALL ON misc.* TO 'fred'@'localhost';
-CREATE USER 'fred'@'127.0.0.1' IDENTIFIED BY 'zap';
+CREATE USER 'alex'@'127.0.0.1' IDENTIFIED BY 'zap';
 GRANT ALL ON misc.* TO 'fred'@'127.0.0.1';
 
 USE misc; (Or select misc in phpMyAdmin)
@@ -19,8 +19,8 @@ CREATE TABLE users (
    INDEX(email)
 ) ENGINE=InnoDB CHARSET=utf8;
 
-INSERT INTO users (name,email,password) VALUES ('Chuck','csev@umich.edu','123');
-INSERT INTO users (name,email,password) VALUES ('Glenn','gg@umich.edu','456');
+INSERT INTO users (name,email,password) VALUES ('Alex','alex@email.com','123');
+INSERT INTO users (name,email,password) VALUES ('Alexia','alexia@email.com','456');
 
 -- Creating the table autos and populate with some data
 CREATE TABLE autos (
