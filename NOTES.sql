@@ -1,12 +1,12 @@
 /* To get started run the following SQL commands.
-Create a user in the database with username: "fred" and password: "zap",
+Create a user in the database with username: "alex" and password: "zap",
 grant him with all permissions and give him access only through the localhost. */
 
 CREATE DATABASE misc;
 CREATE USER 'alex'@'localhost' IDENTIFIED BY 'zap';
-GRANT ALL ON misc.* TO 'fred'@'localhost';
+GRANT ALL ON misc.* TO 'alex'@'localhost';
 CREATE USER 'alex'@'127.0.0.1' IDENTIFIED BY 'zap';
-GRANT ALL ON misc.* TO 'fred'@'127.0.0.1';
+GRANT ALL ON misc.* TO 'alex'@'127.0.0.1';
 
 USE misc; (Or select misc in phpMyAdmin)
 
