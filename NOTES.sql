@@ -27,10 +27,7 @@ The stored password hash is generated using:
 Example: To generate a hash for the password "456" in PHP:
     echo hash('md5', 'XyZzy12*_' . '456');
 This will produce the value: e7cf3ef4f17c3999a94f2c6f612e8a888
-*/
 
-
-/*
  Example users to test login: 
  1) Email: alex@email.com
     Password: 123
