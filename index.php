@@ -4,6 +4,7 @@
 <?php
 session_start();
 
+// A welcome message if we are loged in
 if (isset($_SESSION['name'])) {
   echo ("<p style='padding: 10px; text-align:right;'>");
   echo (" Welcome " . $_SESSION['name'] . "!");
@@ -35,7 +36,7 @@ if (isset($_SESSION['name'])) {
 <body>
 
   <main class="w-60 container bg-light my-5 p-5">
-    <h1 class="mb-5 text-center">Welcome to Autos Application</h1>
+    <h1 class="mb-5 text-center">Welcome to Autos Database</h1>
     <?php
     if (isset($_SESSION["success"])) {
       echo ('<p style="color:green" class="text-center">' . $_SESSION["success"] . "</p>\n");
@@ -46,7 +47,7 @@ if (isset($_SESSION['name'])) {
     if (! isset($_SESSION["account"])) { ?>
       <p class="d-flex justify-content-center my-4">
         <a href="login.php" class="btn btn-success">Log In</a>
-        <a href="view.php" class="btn btn-primary mx-3">View our Autos</a>
+        <a href="view_nologin.php" class="btn btn-primary mx-3">View our Autos</a>
       </p>
     <?php } else { ?>
       <p class="text-center">This is where a cool application would be.</p>

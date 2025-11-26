@@ -11,5 +11,5 @@ $pdo = new PDO(
 // See the "errors" folder for details...
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Constructing hashed password
+// Constructing hashed password with php
 // echo hash('md5', 'XyZzy12*_' . '456');
