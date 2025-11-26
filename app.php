@@ -24,7 +24,7 @@ if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
   return;
 }
 
-// Handling the Insert new Auto form
+// Handling Insert new Auto
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (
     isset($_POST['make']) && isset($_POST['year']) && isset($_POST['mileage'])
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       header("Location: app.php");
       return;
     }
-
+    $_SESSION["addMessage"] = "";
     $sql = "INSERT INTO autos (make, year, mileage)
             VALUES (:make, :year, :mileage)";
     $stmt = $pdo->prepare($sql);
@@ -45,10 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ':year' => $_POST['year'],
       ':mileage' => $_POST['mileage']
     ));
+    $_SESSION["addMessage"] = "The row inserted succesfully.";
 
     unset($_POST['make']);
     unset($_POST['year']);
     unset($_POST['mileage']);
+    header("Location: app.php");
+    return;
   }
 }
 
@@ -119,6 +122,11 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       echo '<p id="deleteMessage" style="color: green;">' . $_SESSION["deleteMessage"] . '</p>';
       unset($_SESSION["deleteMessage"]);
     }
+    // Message for succesfull insertion 
+    if (!empty($_SESSION["addMessage"])) {
+      echo '<p id="addMessage" style="color: green;">' . $_SESSION["addMessage"] . '</p>';
+      unset($_SESSION["addMessage"]);
+    }
     ?>
 
     <!-- Add New Auto form -->
@@ -136,15 +144,26 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </p>
       <p><input type="submit" class="btn btn-success" value="Add New" /></p>
     </form>
+    <?php
 
+    // Flash error message for insertiion
+    if (isset($_SESSION["error"])) {
+      echo ('<p style="color:red">' . $_SESSION["error"] . "</p>\n");
+      unset($_SESSION["error"]);
+    }
+    ?>
   </main>
 
   <script>
     // Hiding the message after some seconds 
     setTimeout(function() {
-      var msg = document.getElementById('deleteMessage');
-      if (msg) {
-        msg.style.visibility = 'hidden';
+      let deleteMessage = document.getElementById('deleteMessage');
+      let addMessage = document.getElementById('addMessage');
+      if (deleteMessage) {
+        deleteMessage.style.visibility = 'hidden';
+      }
+      if (addMessage) {
+        addMessage.style.visibility = 'hidden';
       }
     }, 5000);
   </script>
