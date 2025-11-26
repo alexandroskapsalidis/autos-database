@@ -36,6 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       header("Location: app.php");
       return;
     }
+
+    // Validating Year 
+    $year = $_POST['year'];
+    if (!is_numeric($year) || $year < 1900 || $year > date("Y")) {
+      $_SESSION['error'] = "Wrong year";
+      header("Location: app.php");
+      return;
+    }
+    // Validating Mileage 
+    $mileage = $_POST['mileage'];
+    if (!is_numeric($mileage) || $mileage < 0) {
+      $_SESSION['error'] = "Wrong mileage";
+      header("Location: app.php");
+      return;
+    }
+
+
     $_SESSION["addMessage"] = "";
     $sql = "INSERT INTO autos (make, year, mileage)
             VALUES (:make, :year, :mileage)";

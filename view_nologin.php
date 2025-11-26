@@ -41,7 +41,6 @@ if (isset($_SESSION['name'])) {
           echo ("</td><td>");
           echo htmlentities($row['mileage']);
           echo ("</td></tr>\n");
-          echo ("\n</form>\n");
         }
         ?>
       </table>

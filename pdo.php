@@ -3,8 +3,8 @@
 
 <?php
 $pdo = new PDO(
-   'mysql:host=localhost;port=3306;dbname=coursera_misc',
-   'fred',
+   'mysql:host=localhost;port=3306;dbname=misc',
+   'alex',
    'zap'
 );
 

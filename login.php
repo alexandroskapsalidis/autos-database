@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Checking hashed password
     $salt = 'XyZzy12*_';
-    $email = htmlentities($_POST['email']);
+    $email = $_POST['email'];
     $check = hash('md5', $salt . $_POST['password']);
 
     $stmt = $pdo->prepare("SELECT name, hashed_password FROM users WHERE email = :em");
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="text" size="40" name="email" class="form-control">
       </p>
       <p>Password:
-        <input type="text" size="40" name="password" type="password" class="form-control">
+        <input type="password" size="40" name="password" class="form-control">
       </p>
       <p class="d-flex justify-content-center">
         <input type="submit" value="Login" class="btn btn-success mx-3">

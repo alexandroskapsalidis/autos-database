@@ -4,12 +4,7 @@
 <?php
 session_start();
 
-// A welcome message if we are loged in
-if (isset($_SESSION['name'])) {
-  echo ("<p style='padding: 10px; text-align:right;'>");
-  echo (" Welcome " . $_SESSION['name'] . "!");
-  echo ("</p>");
-}
+
 
 ?>
 
