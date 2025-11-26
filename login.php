@@ -1,11 +1,15 @@
-<!-- The initial page of the project  -->
-
 <!----------------- The Model ------------------------>
 <?php
-
+session_start();
 // Including database connection code 
 require_once "pdo.php";
 
+// A welcome message if we are loged in
+if (isset($_SESSION['name'])) {
+  echo ("<p style='padding: 10px; text-align:right;'>");
+  echo (" Welcome " . $_SESSION['name'] . "!");
+  echo ("</p>");
+}
 
 // Handling login credentials
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -41,22 +45,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // echo '</pre>';
     // die();
 
-    if ($row !== false) {
+    if ($row === false) {
+      // Email not found
+      $_SESSION['error'] = "Email not found";
+      header("Location: login.php");
+      return;
+    }
 
-      $stored_hash = $row['hashed_password'];
+    // If we reach here, email exists. Now check password:
+    $stored_hash = $row['hashed_password'];
 
-      if ($check === $stored_hash) {
-        $_SESSION['email'] = $email;
-        $_SESSION['name'] = $row['name'];
-
-        $_SESSION["success"] = "Logged in";
-        header('Location: view.php');
-        return;
-      } else {
-        $_SESSION['error'] = "Incorrect password";
-        header("Location: login.php");
-        return;
-      }
+    if ($check === $stored_hash) {
+      $_SESSION['email'] = $email;
+      $_SESSION['name'] = $row['name'];
+      $_SESSION['success'] = "Logged in";
+      header("Location: app.php");
+      return;
     } else {
       $_SESSION['error'] = "Incorrect password";
       header("Location: login.php");
@@ -91,16 +95,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   <main class="w-50 container bg-light my-5 p-5">
     <h1 class="mb-5 text-center">Autos Database</h1>
+    <?php
+    if (isset($_SESSION["success"])) {
+      echo ('<p style="color:green" class="text-center">' . $_SESSION["success"] . "</p>\n");
+      unset($_SESSION["success"]);
+    }
+    ?>
     <p>Please Login</p>
     <form method="post">
       <p>Email:
         <input type="text" size="40" name="email" class="form-control">
       </p>
       <p>Password:
-        <input type="text" size="40" name="password" class="form-control">
+        <input type="text" size="40" name="password" type="password" class="form-control">
       </p>
-      <p><input type="submit" value="Login" class="btn btn-success">
+      <p class="d-flex justify-content-center">
+        <input type="submit" value="Login" class="btn btn-success mx-3">
         <a href="<?php echo ($_SERVER['PHP_SELF']); ?>" class="btn btn-warning mx-3">Refresh</a>
+        <a href="index.php" class="btn btn-primary mx-3">Home</a>
       </p>
     </form>
 

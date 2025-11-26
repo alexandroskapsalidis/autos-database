@@ -35,11 +35,11 @@ if (isset($_SESSION['name'])) {
         echo "<tr><th>Make</th><th>Year</th><th>Mileage</th>";
         foreach ($rows as $row) {
           echo "<tr><td>";
-          echo ($row['make']);
+          echo htmlentities($row['make']);
           echo ("</td><td>");
-          echo ($row['year']);
+          echo htmlentities($row['year']);
           echo ("</td><td>");
-          echo ($row['mileage']);
+          echo htmlentities($row['mileage']);
           echo ("</td></tr>\n");
           echo ("\n</form>\n");
         }

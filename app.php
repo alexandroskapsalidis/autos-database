@@ -1,21 +1,27 @@
 <!-- The main page of the project -->
 
-
 <!----------------- The Model ------------------------>
 <?php
-
+session_start();
 // Including database connection code 
 require_once "pdo.php";
 
+// A welcome message if we are loged in
+if (isset($_SESSION['name'])) {
+  echo ("<p style='padding: 10px; text-align:right;'>");
+  echo (" Welcome " . $_SESSION['name'] . "!");
+  echo ("</p>");
+}
+
 // Handling the Delete button
-$deleteMessage = "";
 if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
+  $_SESSION["deleteMessage"] = "";
   $sql = "DELETE FROM autos WHERE auto_id = :zip";
-  // echo "<pre>\n$sql\n</pre>\n";
   $stmt = $pdo->prepare($sql);
   $stmt->execute(array(':zip' => $_POST['auto_id']));
-  $deleteMessage = "The row deleded succesfully.";
-  $sqlDeleteQuery = $sql;
+  $_SESSION["deleteMessage"] = "The row deleted succesfully.";
+  header("Location: app.php");
+  return;
 }
 
 // Handling the Insert new Auto form
@@ -23,6 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (
     isset($_POST['make']) && isset($_POST['year']) && isset($_POST['mileage'])
   ) {
+
+    // Checking if they're empty
+    if (strlen($_POST['make']) < 1 || strlen($_POST['year']) < 1 || strlen($_POST['mileage']) < 1) {
+      $_SESSION['error'] = "All the fields are required";
+      header("Location: app.php");
+      return;
+    }
+
     $sql = "INSERT INTO autos (make, year, mileage)
             VALUES (:make, :year, :mileage)";
     $stmt = $pdo->prepare($sql);
@@ -31,6 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ':year' => $_POST['year'],
       ':mileage' => $_POST['mileage']
     ));
+
+    unset($_POST['make']);
+    unset($_POST['year']);
+    unset($_POST['mileage']);
   }
 }
 
@@ -65,7 +83,13 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
   <main class="w-50 container bg-light my-5 p-5">
-    <h1 class="mb-5 text-center">Welcome to Autos</h1>
+    <h1 class="mb-5 text-center">Autos Database</h1>
+    <?php
+    // No entrance if not logged in 
+    if (! isset($_SESSION["email"])) {
+      die('Not logged in');
+    }
+    ?>
 
     <!-- Showing all Autos -->
     <table class="table mt-4 p-5">
@@ -74,15 +98,15 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       echo "<tr><th>Make</th><th>Year</th><th>Mileage</th><th>Edit</th>";
       foreach ($rows as $row) {
         echo "<tr><td>";
-        echo ($row['make']);
+        echo htmlentities($row['make']);
         echo ("</td><td>");
-        echo ($row['year']);
+        echo htmlentities($row['year']);
         echo ("</td><td>");
-        echo ($row['mileage']);
+        echo htmlentities($row['mileage']);
         echo ("</td><td>");
-        // A little form in every row with a Primary Key embeded in the hidden field 
+        // We use a little form in every row with a Primary Key embeded in the hidden field 
         echo ('<form method="post"><input type="hidden" ');
-        echo ('name="auto_id" value="' . $row['auto_id'] . '">' . "\n");
+        echo ('name="auto_id" value="' . htmlentities($row['auto_id']) . '">' . "\n");
         echo ('<input type="submit"  class="btn btn-danger px-4" value="Del" name="delete">');
         echo ("\n</form>\n");
         echo ("</td></tr>\n");
@@ -91,8 +115,9 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </table>
     <?php
     // Message for succesfull deletion 
-    if (!empty($deleteMessage)) {
-      echo '<h5 class="deleteMessage text-success">' .  htmlentities($deleteMessage) . '</h5>';
+    if (!empty($_SESSION["deleteMessage"])) {
+      echo '<p id="deleteMessage" style="color: green;">' . $_SESSION["deleteMessage"] . '</p>';
+      unset($_SESSION["deleteMessage"]);
     }
     ?>
 
@@ -111,13 +136,13 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </p>
       <p><input type="submit" class="btn btn-success" value="Add New" /></p>
     </form>
+
   </main>
 
-
   <script>
-    // Hiding the delete message after some seconds 
+    // Hiding the message after some seconds 
     setTimeout(function() {
-      var msg = document.querySelector('.deleteMessage');
+      var msg = document.getElementById('deleteMessage');
       if (msg) {
         msg.style.visibility = 'hidden';
       }

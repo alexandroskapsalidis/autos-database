@@ -44,13 +44,12 @@ if (isset($_SESSION['name'])) {
     }
 
     // Check if we are logged in!
-    if (! isset($_SESSION["account"])) { ?>
+    if (! isset($_SESSION["email"])) { ?>
       <p class="d-flex justify-content-center my-4">
         <a href="login.php" class="btn btn-success">Log In</a>
         <a href="view_nologin.php" class="btn btn-primary mx-3">View our Autos</a>
       </p>
     <?php } else { ?>
-      <p class="text-center">This is where a cool application would be.</p>
       <p class=" d-flex justify-content-center my-4">
         <a href="view.php" class="btn btn-primary mx-3">View our Autos</a>
         <a href="logout.php" class="btn btn-danger">Log Out</a>
