@@ -6,18 +6,64 @@
 // Including database connection code 
 require_once "pdo.php";
 
-// Handling login credentials in simple way
-if (isset($_POST['email']) && isset($_POST['password'])) {
-  $sql = "SELECT name FROM users 
-        WHERE email = :em AND password = :pw";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(array(
-    ':em' => $_POST['email'],
-    ':pw' => $_POST['password']
-  ));
-  $row = $stmt->fetch(PDO::FETCH_ASSOC);
-}
 
+// Handling login credentials
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+  if (isset($_POST["email"]) && isset($_POST["password"])) {
+    unset($_SESSION["email"]);  // Logout current user
+
+    // Checking if they're empty
+    if (strlen($_POST['email']) < 1 || strlen($_POST['password']) < 1) {
+      $_SESSION['error'] = "Email and password are required";
+      header("Location: login.php");
+      return;
+    }
+
+    // Checking @ character in the email
+    if (strpos($_POST['email'], '@') === false) {
+      $_SESSION['error'] = "Email must have an at-sign (@)";
+      header("Location: login.php");
+      return;
+    }
+
+    // Checking hashed password
+    $salt = 'XyZzy12*_';
+    $email = htmlentities($_POST['email']);
+    $check = hash('md5', $salt . $_POST['password']);
+
+    $stmt = $pdo->prepare("SELECT name, hashed_password FROM users WHERE email = :em");
+    $stmt->execute(array(':em' => $email));
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // echo '<pre>';
+    // var_dump($check);
+    // echo '</pre>';
+    // die();
+
+    if ($row !== false) {
+
+      $stored_hash = $row['hashed_password'];
+
+      if ($check === $stored_hash) {
+        $_SESSION['email'] = $email;
+        $_SESSION['name'] = $row['name'];
+
+        $_SESSION["success"] = "Logged in";
+        header('Location: view.php');
+        return;
+      } else {
+        $_SESSION['error'] = "Incorrect password";
+        header("Location: login.php");
+        return;
+      }
+    } else {
+      $_SESSION['error'] = "Incorrect password";
+      header("Location: login.php");
+      return;
+    }
+  }
+}
 
 ?>
 
@@ -33,7 +79,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
   <meta name="keywords" content="PHP, MySQL, cars, management, project">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="rese.css" />
-  <title>Autos Project</title>
+  <title>Autos Database</title>
 
   <style>
 
@@ -59,15 +105,16 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     </form>
 
     <?php
-    if (isset($_POST['email']) && isset($_POST['password'])) {
-      if ($row === FALSE) {
-        echo "<h3 class='text-danger mt-4'>Login incorrect.</h3>\n";
-      } else {
-        echo "<h3 class='text-success mt-4'>Login success.</h3>\n";
-        echo "<a href='app.php'>Proceed to the Application</a>";
-      }
+
+    // Flash error message
+    if (isset($_SESSION["error"])) {
+      echo ('<p style="color:red">' . $_SESSION["error"] . "</p>\n");
+      unset($_SESSION["error"]);
     }
+
     ?>
+
+
   </main>
 
 </body>

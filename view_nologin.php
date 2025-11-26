@@ -16,7 +16,7 @@ if (isset($_SESSION['name'])) {
 
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title>Autos Application</title>
+  <title>Autos Database</title>
 </head>
 
 <body>
