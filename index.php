@@ -2,22 +2,13 @@
 
 <!----------------- The Model ------------------------>
 <?php
+session_start();
 
-// Including database connection code 
-require_once "pdo.php";
-
-// Handling login credentials in simple way
-if (isset($_POST['email']) && isset($_POST['password'])) {
-  $sql = "SELECT name FROM users 
-        WHERE email = :em AND password = :pw";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(array(
-    ':em' => $_POST['email'],
-    ':pw' => $_POST['password']
-  ));
-  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+if (isset($_SESSION['name'])) {
+  echo ("<p style='padding: 10px; text-align:right;'>");
+  echo (" Welcome " . $_SESSION['name'] . "!");
+  echo ("</p>");
 }
-
 
 ?>
 
@@ -43,31 +34,27 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
 
 <body>
 
-  <main class="w-50 container bg-light my-5 p-5">
-    <h1 class="mb-5 text-center">Welcome to Autos</h1>
-    <p>Please Login</p>
-    <form method="post">
-      <p>Email:
-        <input type="text" size="40" name="email" class="form-control">
-      </p>
-      <p>Password:
-        <input type="text" size="40" name="password" class="form-control">
-      </p>
-      <p><input type="submit" value="Login" class="btn btn-success">
-        <a href="<?php echo ($_SERVER['PHP_SELF']); ?>" class="btn btn-warning mx-3">Refresh</a>
-      </p>
-    </form>
-
+  <main class="w-60 container bg-light my-5 p-5">
+    <h1 class="mb-5 text-center">Welcome to Autos Application</h1>
     <?php
-    if (isset($_POST['email']) && isset($_POST['password'])) {
-      if ($row === FALSE) {
-        echo "<h3 class='text-danger mt-4'>Login incorrect.</h3>\n";
-      } else {
-        echo "<h3 class='text-success mt-4'>Login success.</h3>\n";
-        echo "<a href='app.php'>Proceed to the Application</a>";
-      }
+    if (isset($_SESSION["success"])) {
+      echo ('<p style="color:green" class="text-center">' . $_SESSION["success"] . "</p>\n");
+      unset($_SESSION["success"]);
     }
-    ?>
+
+    // Check if we are logged in!
+    if (! isset($_SESSION["account"])) { ?>
+      <p class="d-flex justify-content-center my-4">
+        <a href="login.php" class="btn btn-success">Log In</a>
+        <a href="view.php" class="btn btn-primary mx-3">View our Autos</a>
+      </p>
+    <?php } else { ?>
+      <p class="text-center">This is where a cool application would be.</p>
+      <p class=" d-flex justify-content-center my-4">
+        <a href="view.php" class="btn btn-primary mx-3">View our Autos</a>
+        <a href="logout.php" class="btn btn-danger">Log Out</a>
+      </p>
+    <?php } ?>
   </main>
 
 </body>
