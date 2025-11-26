@@ -1,10 +1,10 @@
 # Autos Project
 
-A simple PHP & MySQL web application for managing a list of automobiles. Users can log in, view autos, add new entries, and delete existing ones.
+A PHP & MySQL web application for managing a list of automobiles. Users can log in, view autos, add new entries, and delete existing ones.
 
 ## Features
 
-- Login system using hashed passwords (MD5 + salt)
+- Login system using hashed passwords
 - Session-based authentication
 - View all autos in a dynamic table
 - Add new autos (make, year, mileage) with full validation
