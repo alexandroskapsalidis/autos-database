@@ -1,16 +1,15 @@
-/* To get started run the following SQL commands.
-Create a user in the database with username: "alex" and password: "zap",
-grant him with all permissions and give him access only through the localhost. */
+/* To get started run the following SQL commands.  */
 
 CREATE DATABASE misc;
-CREATE USER 'alex'@'localhost' IDENTIFIED BY 'zap';
-GRANT ALL ON misc.* TO 'alex'@'localhost';
-CREATE USER 'alex'@'127.0.0.1' IDENTIFIED BY 'zap';
-GRANT ALL ON misc.* TO 'alex'@'127.0.0.1';
 
-USE misc; (Or select misc in phpMyAdmin)
+-- Create a MySQL user manually with full access to this database.
+-- Example:
+-- CREATE USER 'youruser'@'localhost' IDENTIFIED BY 'yourpassword';
+-- GRANT ALL PRIVILEGES ON misc.* TO 'youruser'@'localhost';
 
--- Creating the table users and populate with some data
+USE misc; -- Or select misc in phpMyAdmin
+
+-- Create the table users and populate with some data
 CREATE TABLE users (
    user_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
    name VARCHAR(128),
@@ -34,14 +33,14 @@ This will produce the value: e7cf3ef4f17c3999a94f2c6f612e8a888
     Stored hash = md5("XyZzy12*_" . "123") → 1a52e17fa899cf40fb04cfc42e6352f1    
  2) Email: alexia@email.com
     Password: 456
-    Stored hash = md5("XyZzy12*_" . "456") → e7cf3ef4f17c3999a94f2c6f612e8a888
+    Stored hash = md5("XyZzy12*_" . "456") → e7cf3ef4f17c3999a94f2c6f612e8a88
 */
 
 INSERT INTO users (name, email, hashed_password)
 VALUES ('Alex', 'alex@email.com', '1a52e17fa899cf40fb04cfc42e6352f1');
 
 INSERT INTO users (name, email, hashed_password)
-VALUES ('Alexia', 'alexia@email.com', 'e7cf3ef4f17c3999a94f2c6f612e8a888');
+VALUES ('Alexia', 'alexia@email.com', 'e7cf3ef4f17c3999a94f2c6f612e8a88');
 
 -- Create the table autos and populate with some data
 CREATE TABLE autos (

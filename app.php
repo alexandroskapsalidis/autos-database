@@ -6,15 +6,8 @@ session_start();
 // Including database connection code 
 require_once "pdo.php";
 
-// A welcome message if we are loged in
-if (isset($_SESSION['name'])) {
-  echo ("<p style='padding: 10px; text-align:right;'>");
-  echo (" Hello <span style='color:blue; font-size: 1.2em;'>" . $_SESSION['name'] . "</span>");
-  echo ("</p>");
-}
-
+// Handling the Delete button
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Handling the Delete button
   if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
     $_SESSION["deleteMessage"] = "";
     $sql = "DELETE FROM autos WHERE auto_id = :zip";
@@ -42,6 +35,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <meta name="author" content="Alexandros">
   <meta name="description" content="Car management project built with PHP and MySQL.">
   <meta name="keywords" content="PHP, MySQL, cars, management, project">
+  <link rel="icon" type="image/x-icon" href="car-favicon.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="rese.css" />
   <title>Autos Database</title>
@@ -55,15 +49,23 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-
+  <?php
+  // A welcome message if we are loged in
+  if (isset($_SESSION['name'])) {
+    echo ("<p style='padding: 10px; text-align:right;'>");
+    echo (" Welcome " . $_SESSION['name'] . "!");
+    echo ("</p>");
+  }
+  ?>
   <main class="w-50 container bg-light my-5 p-5">
-    <h1 class="mb-5 text-center">Autos Database</h1>
     <?php
     // No entrance if not logged in 
     if (! isset($_SESSION["email"])) {
-      die('<p syle="color:red;font-size:1.3em;">Not logged in</p>');
+      die('<p style="color:red;font-size:1.3em;">Not logged in</p>');
     }
     ?>
+    <h1 class="mb-5 text-center">Autos Database</h1>
+
 
     <!-- Showing all Autos -->
     <table class="table mt-4 p-5">
@@ -91,7 +93,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // We use a little form in every row with a Primary Key embeded in the hidden field 
         echo ('<form method="post"><input type="hidden" ');
         echo ('name="auto_id" value="' . htmlentities($row['auto_id']) . '">' . "\n");
-        echo ('<a class="btn btn-warning px-2 py-1 me-2" href="edit.php?auto_id=' . $row['auto_id'] . '">Edit</a>');
+        echo ('<a class="btn btn-warning px-2 py-1 me-2" href="update.php?auto_id=' . $row['auto_id'] . '">Edit</a>');
         echo ('<input type="submit" class="btn btn-danger px-2  py-1" value="Delete" name="delete">');
         echo ("\n</form>\n");
         echo ("</td></tr>\n");
@@ -104,6 +106,15 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <a href="index.php" class="btn btn-primary mx-4 px-4 py-2">Home</a>
       <a href="logout.php" class="btn btn-danger px-3 py-2">Log Out</a>
     </p>
+
+    <?php
+    // Flash error message for updating
+    if (isset($_SESSION["error"])) {
+      echo ('<p style="color:red">' . $_SESSION["error"] . "</p>\n");
+      unset($_SESSION["error"]);
+    }
+    ?>
+
 
   </main>
 

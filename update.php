@@ -1,4 +1,4 @@
-<!-- Inserting to the database -->
+<!-- Updating a row -->
 
 <!----------------- The Model ------------------------>
 <?php
@@ -6,45 +6,51 @@ session_start();
 // Including database connection code 
 require_once "pdo.php";
 
-// Handling Insert new Auto
+// Procesing UPDATE an existing
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (
-    isset($_POST['make']) && isset($_POST['year']) && isset($_POST['mileage'])
+    isset($_POST['update'], $_POST['make'], $_POST['year'], $_POST['mileage'], $_POST['auto_id'])
   ) {
 
     // Checking if they're empty
-    if (strlen($_POST['make']) < 1 || strlen($_POST['year']) < 1 || strlen($_POST['mileage']) < 1) {
+    if (
+      strlen($_POST['make']) < 1 || strlen($_POST['year']) < 1 || strlen($_POST['mileage']) < 1
+      || strlen($_POST['auto_id']) < 1
+    ) {
       $_SESSION['error'] = "All the fields are required";
-      header("Location: add.php");
+      header("Location: update.php?auto_id=" . $_POST['auto_id']);
       return;
     }
-
     // Validating Year 
     $year = $_POST['year'];
     if (!is_numeric($year) || $year < 1900 || $year > date("Y")) {
       $_SESSION['error'] = "Wrong year";
-      header("Location: add.php");
+      header("Location: update.php?auto_id=" . $_POST['auto_id']);
       return;
     }
     // Validating Mileage 
     $mileage = $_POST['mileage'];
     if (!is_numeric($mileage) || $mileage < 0) {
       $_SESSION['error'] = "Wrong mileage";
-      header("Location: add.php");
+      header("Location: update.php?auto_id=" . $_POST['auto_id']);
       return;
     }
 
 
     $_SESSION["addMessage"] = "";
-    $sql = "INSERT INTO autos (make, year, mileage)
-            VALUES (:make, :year, :mileage)";
+
+    $sql = "UPDATE autos SET make = :make,
+            year = :year, mileage = :mileage
+            WHERE auto_id = :auto_id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(array(
       ':make' => $_POST['make'],
       ':year' => $_POST['year'],
-      ':mileage' => $_POST['mileage']
+      ':mileage' => $_POST['mileage'],
+      ':auto_id' => $_POST['auto_id']
     ));
-    $_SESSION["addMessage"] = "The row inserted succesfully.";
+
+    $_SESSION["addMessage"] = "The row updated succesfully.";
 
     unset($_POST['make']);
     unset($_POST['year']);
@@ -54,7 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
+// Fetching the specific Auto
+$stmt = $pdo->prepare("SELECT * FROM autos where auto_id = :xyz");
+$stmt->execute(array(":xyz" => $_GET['auto_id']));
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($row === false) {
+  $_SESSION['error'] = 'Bad value for auto_id';
+  header('Location: app.php');
+  return;
+}
+
 ?>
+
 
 <!------------------ The View ------------------------>
 <!DOCTYPE html>
@@ -89,36 +107,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
   ?>
   <main class="w-50 container bg-light my-5 p-5">
-    <h1 class="mb-5 text-center">Autos Database</h1>
+
     <?php
     // No entrance if not logged in 
     if (! isset($_SESSION["email"])) {
-      die('<p syle="color:red;font-size:1.3em;">Not logged in</p>');
+      die('<p style="color:red; font-size:1.3em;">Not logged in</p>');
     }
     ?>
 
+    <h1 class="mb-5 text-center">Autos Database</h1>
+
     <!-- Add New Auto form -->
     <!-- <br> -->
-    <h2 class="pt-4">Add New Auto</h2>
+    <h2 class="pt-4">Update Auto</h2>
     <form method="post" class="mt-4">
       <p>Make:
-        <input type="text" class="form-control" name="make" size="40">
+        <input type="text" class="form-control" name="make" size="40" value="<?= htmlentities($row['make']) ?>">
       </p>
       <p>Year:
-        <input type="number" class="form-control" name="year" min="1900" max="2099" step="1">
+        <input type="number" class="form-control" name="year" min="1900" max="2099" step="1" value="<?= htmlentities($row['year']) ?>">
       </p>
       <p>Mileage:
-        <input type="number" class="form-control" name="mileage">
+        <input type="number" class="form-control" name="mileage" value="<?= htmlentities($row['mileage']) ?>">
       </p>
+      <input type="hidden" name="auto_id" value="<?= $row['auto_id'] ?>">
       <p>
-        <input type="submit" class="btn btn-success" value="Add New Auto" />
+        <input type="submit" class="btn btn-success" value="Update" name="update" />
         <a href="app.php" class="btn btn-warning mx-3 px-4">Cancel</a>
         <a href="logout.php" class="btn btn-danger px-3">Log Out</a>
       </p>
     </form>
     <?php
 
-    // Flash error message for insertiion
+    // Flash error message for updating
     if (isset($_SESSION["error"])) {
       echo ('<p style="color:red">' . $_SESSION["error"] . "</p>\n");
       unset($_SESSION["error"]);

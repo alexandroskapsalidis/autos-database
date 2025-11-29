@@ -3,14 +3,6 @@
 <!----------------- The Model ------------------------>
 <?php
 session_start();
-
-// A welcome message if we are loged in
-if (isset($_SESSION['name'])) {
-  echo ("<p style='padding: 10px; text-align:right;'>");
-  echo (" Hello <span style='color:blue; font-size: 1.2em;'>" . $_SESSION['name'] . "</span>");
-  echo ("</p>");
-}
-
 ?>
 
 <!------------------ The View ------------------------>
@@ -23,7 +15,7 @@ if (isset($_SESSION['name'])) {
   <meta name="author" content="Alexandros">
   <meta name="description" content="Car management project built with PHP and MySQL.">
   <meta name="keywords" content="PHP, MySQL, cars, management, project">
-  <link rel="icon" type="image/x-icon" href="/car-favicon.png">
+  <link rel="icon" type="image/x-icon" href="car-favicon.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="rese.css" />
   <title>Autos Database</title>
@@ -36,6 +28,14 @@ if (isset($_SESSION['name'])) {
 
 <body>
 
+  <?php
+  // A welcome message if we are loged in
+  if (isset($_SESSION['name'])) {
+    echo ("<p style='padding: 10px; text-align:right;'>");
+    echo (" Hello <span style='color:blue; font-size: 1.2em;'>" . $_SESSION['name'] . "</span>");
+    echo ("</p>");
+  }
+  ?>
   <main class="w-60 container bg-light my-5 p-5">
     <h1 class="mb-5 text-center">Welcome to Autos Database</h1>
     <?php
