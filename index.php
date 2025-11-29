@@ -4,7 +4,12 @@
 <?php
 session_start();
 
-
+// A welcome message if we are loged in
+if (isset($_SESSION['name'])) {
+  echo ("<p style='padding: 10px; text-align:right;'>");
+  echo (" Hello <span style='color:blue; font-size: 1.2em;'>" . $_SESSION['name'] . "</span>");
+  echo ("</p>");
+}
 
 ?>
 
@@ -18,6 +23,7 @@ session_start();
   <meta name="author" content="Alexandros">
   <meta name="description" content="Car management project built with PHP and MySQL.">
   <meta name="keywords" content="PHP, MySQL, cars, management, project">
+  <link rel="icon" type="image/x-icon" href="/car-favicon.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="rese.css" />
   <title>Autos Database</title>
@@ -46,7 +52,7 @@ session_start();
       </p>
     <?php } else { ?>
       <p class=" d-flex justify-content-center my-4">
-        <a href="view.php" class="btn btn-primary mx-3">View our Autos</a>
+        <a href="app.php" class="btn btn-primary mx-3">View our Autos</a>
         <a href="logout.php" class="btn btn-danger">Log Out</a>
       </p>
     <?php } ?>

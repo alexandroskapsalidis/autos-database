@@ -9,64 +9,18 @@ require_once "pdo.php";
 // A welcome message if we are loged in
 if (isset($_SESSION['name'])) {
   echo ("<p style='padding: 10px; text-align:right;'>");
-  echo (" Welcome " . $_SESSION['name'] . "!");
+  echo (" Hello <span style='color:blue; font-size: 1.2em;'>" . $_SESSION['name'] . "</span>");
   echo ("</p>");
 }
 
-// Handling the Delete button
-if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
-  $_SESSION["deleteMessage"] = "";
-  $sql = "DELETE FROM autos WHERE auto_id = :zip";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(array(':zip' => $_POST['auto_id']));
-  $_SESSION["deleteMessage"] = "The row deleted succesfully.";
-  header("Location: app.php");
-  return;
-}
-
-// Handling Insert new Auto
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  if (
-    isset($_POST['make']) && isset($_POST['year']) && isset($_POST['mileage'])
-  ) {
-
-    // Checking if they're empty
-    if (strlen($_POST['make']) < 1 || strlen($_POST['year']) < 1 || strlen($_POST['mileage']) < 1) {
-      $_SESSION['error'] = "All the fields are required";
-      header("Location: app.php");
-      return;
-    }
-
-    // Validating Year 
-    $year = $_POST['year'];
-    if (!is_numeric($year) || $year < 1900 || $year > date("Y")) {
-      $_SESSION['error'] = "Wrong year";
-      header("Location: app.php");
-      return;
-    }
-    // Validating Mileage 
-    $mileage = $_POST['mileage'];
-    if (!is_numeric($mileage) || $mileage < 0) {
-      $_SESSION['error'] = "Wrong mileage";
-      header("Location: app.php");
-      return;
-    }
-
-
-    $_SESSION["addMessage"] = "";
-    $sql = "INSERT INTO autos (make, year, mileage)
-            VALUES (:make, :year, :mileage)";
+  // Handling the Delete button
+  if (isset($_POST['delete']) && isset($_POST['auto_id'])) {
+    $_SESSION["deleteMessage"] = "";
+    $sql = "DELETE FROM autos WHERE auto_id = :zip";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(array(
-      ':make' => $_POST['make'],
-      ':year' => $_POST['year'],
-      ':mileage' => $_POST['mileage']
-    ));
-    $_SESSION["addMessage"] = "The row inserted succesfully.";
-
-    unset($_POST['make']);
-    unset($_POST['year']);
-    unset($_POST['mileage']);
+    $stmt->execute(array(':zip' => $_POST['auto_id']));
+    $_SESSION["deleteMessage"] = "The row deleted succesfully.";
     header("Location: app.php");
     return;
   }
@@ -94,7 +48,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <style>
     h2 {
-      font-size: 1.8rem;
+      font-size: 1.4rem;
     }
   </style>
 
@@ -107,15 +61,25 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php
     // No entrance if not logged in 
     if (! isset($_SESSION["email"])) {
-      die('Not logged in');
+      die('<p syle="color:red;font-size:1.3em;">Not logged in</p>');
     }
     ?>
 
     <!-- Showing all Autos -->
     <table class="table mt-4 p-5">
       <?php
+      // Message for succesfull deletion 
+      if (!empty($_SESSION["deleteMessage"])) {
+        echo '<p id="deleteMessage" style="color: green; text-align:center; margin:0; padding:0;">' . $_SESSION["deleteMessage"] . '</p>';
+        unset($_SESSION["deleteMessage"]);
+      }
+      // Message for succesfull insertion 
+      if (!empty($_SESSION["addMessage"])) {
+        echo '<p id="addMessage" style="color: green; text-align:center">' . $_SESSION["addMessage"] . '</p>';
+        unset($_SESSION["addMessage"]);
+      }
       echo "<h2>All Autos</h2>";
-      echo "<tr><th>Make</th><th>Year</th><th>Mileage</th><th>Edit</th>";
+      echo "<tr><th>Make</th><th>Year</th><th>Mileage</th><th>Action</th>";
       foreach ($rows as $row) {
         echo "<tr><td>";
         echo htmlentities($row['make']);
@@ -127,52 +91,24 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // We use a little form in every row with a Primary Key embeded in the hidden field 
         echo ('<form method="post"><input type="hidden" ');
         echo ('name="auto_id" value="' . htmlentities($row['auto_id']) . '">' . "\n");
-        echo ('<input type="submit"  class="btn btn-danger px-4" value="Del" name="delete">');
+        echo ('<a class="btn btn-warning px-2 py-1 me-2" href="edit.php?auto_id=' . $row['auto_id'] . '">Edit</a>');
+        echo ('<input type="submit" class="btn btn-danger px-2  py-1" value="Delete" name="delete">');
         echo ("\n</form>\n");
         echo ("</td></tr>\n");
       }
       ?>
     </table>
-    <?php
-    // Message for succesfull deletion 
-    if (!empty($_SESSION["deleteMessage"])) {
-      echo '<p id="deleteMessage" style="color: green;">' . $_SESSION["deleteMessage"] . '</p>';
-      unset($_SESSION["deleteMessage"]);
-    }
-    // Message for succesfull insertion 
-    if (!empty($_SESSION["addMessage"])) {
-      echo '<p id="addMessage" style="color: green;">' . $_SESSION["addMessage"] . '</p>';
-      unset($_SESSION["addMessage"]);
-    }
-    ?>
 
-    <!-- Add New Auto form -->
-    <!-- <br> -->
-    <h2 class="pt-4">Add New Auto</h2>
-    <form method="post" class="mt-4">
-      <p>Make:
-        <input type="text" class="form-control" name="make" size="40">
-      </p>
-      <p>Year:
-        <input type="number" class="form-control" name="year" min="1900" max="2099" step="1">
-      </p>
-      <p>Mileage:
-        <input type="number" class="form-control" name="mileage">
-      </p>
-      <p><input type="submit" class="btn btn-success" value="Add New" /></p>
-    </form>
-    <?php
+    <p class="d-flex justify-content-left pt-4">
+      <a href="add.php" class="btn btn-success  px-4 py-2">Add New Auto</a>
+      <a href="index.php" class="btn btn-primary mx-4 px-4 py-2">Home</a>
+      <a href="logout.php" class="btn btn-danger px-3 py-2">Log Out</a>
+    </p>
 
-    // Flash error message for insertiion
-    if (isset($_SESSION["error"])) {
-      echo ('<p style="color:red">' . $_SESSION["error"] . "</p>\n");
-      unset($_SESSION["error"]);
-    }
-    ?>
   </main>
 
   <script>
-    // Hiding the message after some seconds 
+    // Hiding the messages after some seconds 
     setTimeout(function() {
       let deleteMessage = document.getElementById('deleteMessage');
       let addMessage = document.getElementById('addMessage');
@@ -183,6 +119,16 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         addMessage.style.visibility = 'hidden';
       }
     }, 5000);
+
+    // Confirm Deletion 
+    document.querySelectorAll('input[name="delete"]').forEach(btn => {
+      btn.addEventListener('click', function(event) {
+        const ok = confirm("Are you sure you want to delete this auto?");
+        if (!ok) {
+          event.preventDefault(); // Stops the submit of the form
+        }
+      });
+    });
   </script>
 
 </body>
