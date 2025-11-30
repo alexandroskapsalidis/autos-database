@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // A welcome message if we are loged in
   if (isset($_SESSION['name'])) {
     echo ("<p style='padding: 10px; text-align:right;'>");
-    echo (" Welcome " . $_SESSION['name'] . "!");
+    echo (" Hello <span style='color:blue; font-size: 1.2em;'>" . $_SESSION['name'] . "</span>");
     echo ("</p>");
   }
   ?>
