@@ -36,5 +36,4 @@ View the project online using the following credentials
 
 - Email: demo@email.com
 - Password: 123
-
-[Live Demo 🌐] => <a href="https://kapsalidis-autos-database.great-site.net/" target="_blank">Autos Database</a>
+<p>Live Demo 🌐: <a href="https://kapsalidis-autos-database.great-site.net/" target="_blank">Autos Database</a></p>
