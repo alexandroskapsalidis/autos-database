@@ -47,7 +47,8 @@ VALUES ('Alexia', 'alexia@email.com', 'e7cf3ef4f17c3999a94f2c6f612e8a88');
 CREATE TABLE autos (
    auto_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
    make VARCHAR(128),
-   year INTEGER,
-   mileage INTEGER,
+   year INT,
+   mileage INT,
    PRIMARY KEY(auto_id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
