@@ -1,21 +1,27 @@
 # Autos Project
 
-A PHP & MySQL web application for managing a list of automobiles. Users can log in, view autos, add new entries, and delete existing ones.
+A complete PHP & MySQL CRUD web application for managing automobiles.
+Users can log in, view autos, add new entries, update existing ones, and delete records.
 
 ## Features
 
 - Login system using hashed passwords
 - Session-based authentication
-- View all autos in a dynamic table
-- Add new autos (make, year, mileage) with full validation
-- Delete autos with inline forms
+- **CRUD operations**:
+  - Create new autos
+  - Read all autos in a dynamic table
+  - Update an existing auto
+  - Delete autos
+- Form validation\*\* (server-side)
 - Flash messages for success/error feedback
 - Secure output with htmlentities() to prevent XSS
+- Bootstrap UI
 
 ## Technologies
 
 - PHP 8+ (with PDO for database interaction)
 - MySQL
+- PDO (Prepared Statements)
 - HTML5 / CSS3
 - Bootstrap 5
 - Basic JavaScript (UI interactions)
