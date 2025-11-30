@@ -29,3 +29,10 @@ Users can log in, view autos, add new entries, update existing ones, and delete 
 ## Database Setup
 
 To get started, use the included `NOTES.sql` file. It creates the database, users, and tables with sample data.
+
+[Live Demo 🌐](https://kapsalidis-autos-database.great-site.net/)
+
+**Demo credentials:**
+
+- Email: demo@email.com
+- Password: 123
