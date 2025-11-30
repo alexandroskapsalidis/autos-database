@@ -2,6 +2,7 @@
 
 CREATE DATABASE misc;
 
+-- (Optional)
 -- Create a MySQL user manually with full access to this database.
 -- Example:
 -- CREATE USER 'youruser'@'localhost' IDENTIFIED BY 'yourpassword';
