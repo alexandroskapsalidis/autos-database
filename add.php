@@ -45,10 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ':mileage' => $_POST['mileage']
     ));
     $_SESSION["addMessage"] = "The row inserted succesfully.";
-
-    unset($_POST['make']);
-    unset($_POST['year']);
-    unset($_POST['mileage']);
     header("Location: app.php");
     return;
   }
