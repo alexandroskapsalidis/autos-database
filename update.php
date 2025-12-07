@@ -3,10 +3,10 @@
 <!----------------- The Model ------------------------>
 <?php
 session_start();
-// Including database connection code 
+// Including database connection code
 require_once "pdo.php";
 
-// Procesing UPDATE an existing
+// Procesing UPDATE
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (
     isset($_POST['update'], $_POST['make'], $_POST['year'], $_POST['mileage'], $_POST['auto_id'])
@@ -35,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       header("Location: update.php?auto_id=" . $_POST['auto_id']);
       return;
     }
-
 
     $_SESSION["addMessage"] = "";
 
@@ -73,8 +72,8 @@ if ($row === false) {
 
 ?>
 
-
 <!------------------ The View ------------------------>
+
 <!DOCTYPE html>
 <html lang="en">
 
